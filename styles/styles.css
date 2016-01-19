@@ -23,6 +23,8 @@ li {
 }
 
 li img {
+  max-width: 350px;
+  max-height: 400px;
   width: 30%;
   height: 30%;
 }
