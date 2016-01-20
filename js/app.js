@@ -108,7 +108,8 @@ function clickImg3() { // Called by handler for image 3
   initialImg();
 }
 
-// Keeps track of total image clicks in a global variable. Debatable whether I really need this
+// Keeps track of total image clicks in a global variable.
+// My dynamic button-displaying function depends on this function.
 function logTotalClicks() {
   totalClickCounter += 1;
   console.log(totalClickCounter);
