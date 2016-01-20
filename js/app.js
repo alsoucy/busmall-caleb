@@ -1,62 +1,27 @@
 // My javascript lives in here
 'use strict';
-console.log('My javascript is hooked up to my HTML');
 
-// Maybe using this array later?
-var productID = [
-  'bag',
-  'banana',
-  'boots',
-  'chair',
-  'cthulhu',
-  'dragon',
-  'pen',
-  'scissors',
-  'shark',
-  'sweep',
-  'unicorn',
-  'usb-tentacle',
-  'water-can',
-  'wine-glass'
-];
+// This array contains the names that populate in my image file paths
+var productID = ['Bag', 'Banana', 'Boots', 'Chair', 'Cthulhu', 'Dragon', 'Pen', 'Scissors', 'Shark', 'Sweep', 'Unicorn', 'USB Tentacle', 'Water Can', 'Wine Glass'];
 
 // This array contains the file names that populate in my image file paths
-var productImgs = [
-  'bag.jpg',
-  'banana.jpg',
-  'boots.jpg',
-  'chair.jpg',
-  'cthulhu.jpg',
-  'dragon.jpg',
-  'pen.jpg',
-  'scissors.jpg',
-  'shark.jpg',
-  'sweep.png',
-  'unicorn.jpg',
-  'usb.gif',
-  'water-can.jpg',
-  'wine-glass.jpg'
-];
+var productImgs = ['bag.jpg', 'banana.jpg', 'boots.jpg', 'chair.jpg', 'cthulhu.jpg', 'dragon.jpg', 'pen.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'unicorn.jpg', 'usb.gif', 'water-can.jpg', 'wine-glass.jpg'];
 
-// Records log of impressions
-var displayCounterImg1 = [];
-var displayCounterImg2 = [];
-var displayCounterImg3 = [];
+// The 'allProducts' array will be dynamically populated with data via constructor Function "Products"
+var allProducts = [];
+var totalClickCounter = 0;
+var imgPath = '<img src="images/products/';
+var imgClose = '" />';
 
-// Records log of clicks
-var clickCounterImg1 = [];
-var clickCounterImg2 = [];
-var clickCounterImg3 = [];
+function Products(name, filePath, percentClick) {
+  this.name = name;
+  this.filePath = filePath;
+  this.impressions = 0;
+  this.clicks = 0;
+}
 
-var totalClickCounter = 0
-
-var imgPath = '<img src="images/products/'
-var imgClose = '" />'
-
-function FocusGroupData(displayCount, clickCount, percentClick) {
-  this.displayCount = [];
-  this.clickCount = [];
-  this.percentClick = percentClick;
+for (var i = 0; i < productImgs.length; i++) {
+  allProducts.push(new Products(productID[i], productImgs[i]));
 }
 
 var fetchImg1 = document.getElementById('imgContainer1');
@@ -64,77 +29,95 @@ var fetchImg2 = document.getElementById('imgContainer2');
 var fetchImg3 = document.getElementById('imgContainer3');
 var imgSection = document.getElementById('imgContainer');
 
-var countImg1 = 0;
-var countImg2 = 0;
-var countImg3 = 0;
+fetchImg1.addEventListener('click', handleClickImg1);
+fetchImg2.addEventListener('click', handleClickImg2);
+fetchImg3.addEventListener('click', handleClickImg3);
 
-fetchImg1.addEventListener('click', clickImg1);
-fetchImg1.addEventListener('click', logTotalClicks);
-fetchImg2.addEventListener('click', clickImg2);
-fetchImg2.addEventListener('click', logTotalClicks);
-fetchImg3.addEventListener('click', clickImg3);
-fetchImg3.addEventListener('click', logTotalClicks);
+function handleClickImg1() {
+  console.log('One was clicked');
+  clickImg1();
+  logTotalClicks();
+}
+
+function handleClickImg2() {
+  console.log('Two was clicked');
+  clickImg2();
+  logTotalClicks();
+}
+
+function handleClickImg3() {
+  console.log('Three was clicked');
+  clickImg3();
+  logTotalClicks();
+}
+
 imgSection.addEventListener('click', genDataButton);
 
+// Random number generator that can be called in multiple functions later
 function randoImage() {
   return Math.floor(Math.random() * productImgs.length);
 }
 
+// Setting the variables for the randomizers outside of the function
+// This is a bit of cheezy solution, but will function for the purposes of this project
+var randomizer1, randomizer2, randomizer3;
+
+// Function for displaying 3 random images in HTML (and tracking impressions)
 function initialImg() {
-  var randomizer1 = randoImage()
-  displayCounterImg1.push(randomizer1);
-  imgContainer1.innerHTML = imgPath + productImgs[randomizer1] + imgClose;
+  randomizer1 = randoImage()
+  imgContainer1.innerHTML = imgPath + allProducts[randomizer1].filePath + imgClose;
+  allProducts[randomizer1].impressions += 1;
 
-  var randomizer2 = randoImage()
-  while (randomizer2 === randomizer1 || randomizer2 === randomizer3) {
-    var randomizer2 = randoImage();
+  randomizer2 = randoImage()
+  while (randomizer2 === randomizer1) {
+    randomizer2 = randoImage();
   }
-  displayCounterImg2.push(randomizer2);
-  imgContainer2.innerHTML = imgPath + productImgs[randomizer2] + imgClose;
+  imgContainer2.innerHTML = imgPath + allProducts[randomizer2].filePath + imgClose;
+  allProducts[randomizer2].impressions += 1;
 
-  var randomizer3 = randoImage()
+  randomizer3 = randoImage()
   while (randomizer3 === randomizer1 || randomizer3 === randomizer2) {
-    var randomizer3 = randoImage();
+    randomizer3 = randoImage();
   }
-  displayCounterImg3.push(randomizer3);
-  imgContainer3.innerHTML = imgPath + productImgs[randomizer3] + imgClose;
-
-  // if (randomizer1 === randomizer2 || randomizer1 === randomizer3 || randomizer2 === randomizer3) {
-  //   console.log('I need to fix this!');
-  // }
+  imgContainer3.innerHTML = imgPath + allProducts[randomizer3].filePath + imgClose;
+  allProducts[randomizer3].impressions += 1;
 }
 initialImg();
 
-function clickImg1() {
+// This set of functions governs app behavior when images are clicked
+function clickImg1() { // Called by handler for image 1
+  // Tally the click on an image
+  // In other words, allProducts[our random index number].clicks += 1
+  // The variable 'clicks' goes up one for the product referenced in the master product array
+  allProducts[randomizer1].clicks += 1;
+  // The function 'makeMahClicksArray' handles pushing tallied clicks on images into 'clicks' array
+  makeMahClicksArray();
+  // Refreshes image after click event (and after previous code has run)
   initialImg();
-  var clickBait1 = displayCounterImg1[displayCounterImg1.length - 2];
-  clickCounterImg1.push(clickBait1);
-  console.log(clickCounterImg1);
 }
 
-function clickImg2() {
+function clickImg2() { // Called by handler for image 2
+  allProducts[randomizer2].clicks += 1;
+  makeMahClicksArray();
   initialImg();
-  var clickBait2 = displayCounterImg2[displayCounterImg2.length - 2];
-  clickCounterImg2.push(clickBait2);
-  console.log(clickCounterImg2);
 }
 
-function clickImg3() {
+function clickImg3() { // Called by handler for image 3
+  allProducts[randomizer3].clicks += 1;
+  makeMahClicksArray();
   initialImg();
-  var clickBait3 = displayCounterImg3[displayCounterImg3.length - 2];
-  clickCounterImg3.push(clickBait3);
-  console.log(clickCounterImg3);
 }
 
+// Keeps track of total image clicks in a global variable. Debatable whether I really need this
 function logTotalClicks() {
   totalClickCounter += 1;
   console.log(totalClickCounter);
 }
 
-// Function is set to generate button after just 3 clicks (until testing is complete)
+// Function is set to generate button after just 4 clicks (until testing is complete)
 function genDataButton() {
-  if (totalClickCounter > 2) {
-    console.log('Congratulations, You\'ve clicked on 15 or more images!');
+  if (totalClickCounter > 3) {
+    console.table(allProducts);
     // Find the section in index.html where the button will appear
     var buttonContent = document.getElementById('dataButtonContainer');
     // Populate the section with a paragraph of text and a button
@@ -146,7 +129,17 @@ function genDataButton() {
   }
 }
 
+// This function renders data chart visible to user in HTML when user clicks button
 function renderDataTable() {
   var fetchTableEl = document.getElementById('userDataTable');
   fetchTableEl.innerHTML = '<h2>BWAHAHAHA, You were expecting <em>DATA</em>, chump?</h2>';
+}
+
+// This function handles pushing tallied clicks on images into 'clicks' array
+var clicksArrayForChart = [];
+function makeMahClicksArray() {
+  clicksArrayForChart = [];
+  for (var i = 0; i < allProducts.length; i++) {
+    clicksArrayForChart.push(allProducts[i].clicks);
+  }
 }
