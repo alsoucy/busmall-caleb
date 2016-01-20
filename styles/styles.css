@@ -1,3 +1,6 @@
+header {
+  color: #f25e52;
+}
 h1, h2, h3 {
   font-family: Verdana;
 }
@@ -9,17 +12,16 @@ p {
 ul {
   padding: 0px;
   margin: 0 0 0 0;
-  float: left;
-  border-bottom: 5px solid #eaea31;
-  border-top: 5px solid #eaea31;
+  border-bottom: 6px solid #eaea31;
+  border-top: 6px solid #eaea31;
 }
 
 li {
   font-family: Verdana;
   height: 25px;
   display: inline;
-  border-right: 5px solid #eaea31;
-  border-left: 5px solid #eaea31;
+  border-right: 8px solid white;
+  border-left: 8px solid white;
 }
 
 li img {
@@ -27,4 +29,10 @@ li img {
   max-height: 400px;
   width: 30%;
   height: 30%;
+}
+.instructions {
+  text-align: left;
+}
+section {
+  text-align: center;
 }
