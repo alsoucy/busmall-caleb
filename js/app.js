@@ -148,7 +148,10 @@ function genDataButton() {
 function renderDataTable() {
   var fetchTableEl = document.getElementById('userDataTable');
   fetchTableEl.innerHTML = '<p>The grey bars represent the times each product was shown to you.</p><p>The blue bars represent the times you atually clicked on a product to vote for it!</p>';
-
+  var impArray = [allProducts[0].impressions, allProducts[1].impressions, allProducts[2].impressions, allProducts[3].impressions, allProducts[4].impressions, allProducts[5].impressions, allProducts[6].impressions, allProducts[7].impressions, allProducts[8].impressions, allProducts[9].impressions, allProducts[10].impressions, allProducts[11].impressions, allProducts[12].impressions, allProducts[13].impressions];
+  var clickArray = [allProducts[0].clicks, allProducts[1].clicks, allProducts[2].clicks, allProducts[3].clicks, allProducts[4].clicks, allProducts[5].clicks, allProducts[6].clicks, allProducts[7].clicks, allProducts[8].clicks, allProducts[9].clicks, allProducts[10].clicks, allProducts[11].clicks, allProducts[12].clicks, allProducts[13].clicks];
+  localStorage.setItem('impressionsData', JSON.stringify(impArray));
+  localStorage.setItem('clicksData', JSON.stringify(clickArray));
   var demoCTX = document.getElementById("myChart").getContext("2d");
   var data = {
     labels: productID,
@@ -159,7 +162,7 @@ function renderDataTable() {
         strokeColor: "rgba(220,220,220,0.8)",
         highlightFill: "rgba(220,220,220,0.75)",
         highlightStroke: "rgba(220,220,220,1)",
-        data: [allProducts[0].impressions, allProducts[1].impressions, allProducts[2].impressions, allProducts[3].impressions, allProducts[4].impressions, allProducts[5].impressions, allProducts[6].impressions, allProducts[7].impressions, allProducts[8].impressions, allProducts[9].impressions, allProducts[10].impressions, allProducts[11].impressions, allProducts[12].impressions, allProducts[13].impressions]
+        data: impArray
       },
       {
         label: "Clicks on images",
@@ -167,9 +170,49 @@ function renderDataTable() {
         strokeColor: "rgba(151,187,205,0.8)",
         highlightFill: "rgba(151,187,205,0.75)",
         highlightStroke: "rgba(151,187,205,1)",
-        data: [allProducts[0].clicks, allProducts[1].clicks, allProducts[2].clicks, allProducts[3].clicks, allProducts[4].clicks, allProducts[5].clicks, allProducts[6].clicks, allProducts[7].clicks, allProducts[8].clicks, allProducts[9].clicks, allProducts[10].clicks, allProducts[11].clicks, allProducts[12].clicks, allProducts[13].clicks]
+        data: clickArray
       }
     ]
   };
   var myNewChart = new Chart(demoCTX).Bar(data);
+  // Persist data in HTML5 Local Storage
+  var chartData1 = localStorage.getItem('impressionsData');
+  if (chartData1) {
+    impArray = JSON.parse(chartData1);
+  } else {
+    console.log('Local storage empty! Initializing');
+    localStorage.setItem('impressionsData', JSON.stringify(impArray));
+    }
+
+    var chartData2 = localStorage.getItem('clicksData');
+    if (chartData2) {
+      clickArray = JSON.parse(chartData2);
+    } else {
+      console.log('Local storage empty! Initializing');
+      localStorage.setItem('clicksData', JSON.stringify(clickArray));
+    }
 }
+//clear LS button
+var clearLS = document.getElementById('clearStorage');
+clearLS.addEventListener('click', handleLSClear);
+function handleLSClear() {
+  console.log('Clearing Local Storage');
+  localStorage.clear();
+};
+
+// // Persist data in HTML5 Local Storage
+// var chartData1 = localStorage.getItem('impressionsData');
+// if (chartData1) {
+//   impArray = JSON.parse(chartData1);
+// } else {
+//   console.log('Local storage empty! Initializing');
+//   localStorage.setItem('impressionsData', JSON.stringify(impArray));
+//   }
+//
+//   var chartData2 = localStorage.getItem('clicksData');
+//   if (chartData2) {
+//     clickArray = JSON.parse(chartData2);
+//   } else {
+//     console.log('Local storage empty! Initializing');
+//     localStorage.setItem('clicksData', JSON.stringify(clickArray));
+//   }
