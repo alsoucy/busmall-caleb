@@ -18,6 +18,11 @@ function Products(name, filePath, percentClick) {
   this.filePath = filePath;
   this.impressions = 0;
   this.clicks = 0;
+
+  // data.labels.push(productID);
+  // data.datasets[0].data.push(0);
+  // allProducts.push(this);
+
 }
 
 for (var i = 0; i < productImgs.length; i++) {
@@ -66,23 +71,32 @@ var randomizer1, randomizer2, randomizer3;
 function initialImg() {
   randomizer1 = randoImage()
   imgContainer1.innerHTML = imgPath + allProducts[randomizer1].filePath + imgClose;
-  allProducts[randomizer1].impressions += 1;
+  allProducts[randomizer1].impressions++;
 
   randomizer2 = randoImage()
   while (randomizer2 === randomizer1) {
     randomizer2 = randoImage();
   }
   imgContainer2.innerHTML = imgPath + allProducts[randomizer2].filePath + imgClose;
-  allProducts[randomizer2].impressions += 1;
+  allProducts[randomizer2].impressions++;
 
   randomizer3 = randoImage()
   while (randomizer3 === randomizer1 || randomizer3 === randomizer2) {
     randomizer3 = randoImage();
   }
   imgContainer3.innerHTML = imgPath + allProducts[randomizer3].filePath + imgClose;
-  allProducts[randomizer3].impressions += 1;
+  allProducts[randomizer3].impressions++;
 }
 initialImg();
+
+// This function handles pushing tallied clicks on images into 'clicks' array
+var clicksArrayForChart = [];
+function makeMahClicksArray() {
+  clicksArrayForChart = [];
+  for (var i = 0; i < allProducts.length; i++) {
+    clicksArrayForChart.push(allProducts[i].clicks);
+  }
+}
 
 // This set of functions governs app behavior when images are clicked
 function clickImg1() { // Called by handler for image 1
@@ -108,7 +122,8 @@ function clickImg3() { // Called by handler for image 3
   initialImg();
 }
 
-// Keeps track of total image clicks in a global variable. Debatable whether I really need this
+// Keeps track of total image clicks in a global variable.
+// My dynamic button-displaying function depends on this function.
 function logTotalClicks() {
   totalClickCounter += 1;
   console.log(totalClickCounter);
@@ -116,7 +131,7 @@ function logTotalClicks() {
 
 // Function is set to generate button after just 4 clicks (until testing is complete)
 function genDataButton() {
-  if (totalClickCounter > 3) {
+  if (totalClickCounter > 6) {
     console.table(allProducts);
     // Find the section in index.html where the button will appear
     var buttonContent = document.getElementById('dataButtonContainer');
@@ -132,14 +147,29 @@ function genDataButton() {
 // This function renders data chart visible to user in HTML when user clicks button
 function renderDataTable() {
   var fetchTableEl = document.getElementById('userDataTable');
-  fetchTableEl.innerHTML = '<h2>BWAHAHAHA, You were expecting <em>DATA</em>, chump?</h2>';
-}
+  fetchTableEl.innerHTML = '<p>The grey bars represent the times each product was shown to you.</p><p>The blue bars represent the times you atually clicked on a product to vote for it!</p>';
 
-// This function handles pushing tallied clicks on images into 'clicks' array
-var clicksArrayForChart = [];
-function makeMahClicksArray() {
-  clicksArrayForChart = [];
-  for (var i = 0; i < allProducts.length; i++) {
-    clicksArrayForChart.push(allProducts[i].clicks);
-  }
+  var demoCTX = document.getElementById("myChart").getContext("2d");
+  var data = {
+    labels: productID,
+    datasets: [
+      {
+        label: "Impressions on page",
+        fillColor: "rgba(220,220,220,0.5)",
+        strokeColor: "rgba(220,220,220,0.8)",
+        highlightFill: "rgba(220,220,220,0.75)",
+        highlightStroke: "rgba(220,220,220,1)",
+        data: [allProducts[0].impressions, allProducts[1].impressions, allProducts[2].impressions, allProducts[3].impressions, allProducts[4].impressions, allProducts[5].impressions, allProducts[6].impressions, allProducts[7].impressions, allProducts[8].impressions, allProducts[9].impressions, allProducts[10].impressions, allProducts[11].impressions, allProducts[12].impressions, allProducts[13].impressions]
+      },
+      {
+        label: "Clicks on images",
+        fillColor: "rgba(151,187,205,0.5)",
+        strokeColor: "rgba(151,187,205,0.8)",
+        highlightFill: "rgba(151,187,205,0.75)",
+        highlightStroke: "rgba(151,187,205,1)",
+        data: [allProducts[0].clicks, allProducts[1].clicks, allProducts[2].clicks, allProducts[3].clicks, allProducts[4].clicks, allProducts[5].clicks, allProducts[6].clicks, allProducts[7].clicks, allProducts[8].clicks, allProducts[9].clicks, allProducts[10].clicks, allProducts[11].clicks, allProducts[12].clicks, allProducts[13].clicks]
+      }
+    ]
+  };
+  var myNewChart = new Chart(demoCTX).Bar(data);
 }

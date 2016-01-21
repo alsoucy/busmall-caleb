@@ -36,3 +36,7 @@ li img {
 section {
   text-align: center;
 }
+.chart {
+  display: flex;
+  justify-content: center;
+}
